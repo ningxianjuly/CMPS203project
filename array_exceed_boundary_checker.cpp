@@ -22,17 +22,122 @@ using namespace std;
 class Dictionary {
 public:
 	static unordered_map<string, unordered_map<string, pair<string, int>>> dic;
-	static unordered_map<string, unordered_map<string, pair<string, int>>> build_dic() {
+	static void build_dic() {
 		unordered_map<string, pair<string, int>> array;
+		unordered_map<string, pair<string, int>> variable;
 		dic["ARY"] = array;
-		return dic;
+		dic["VAR"] = variable;
 
 	}
 };
 unordered_map<string, unordered_map<string, pair<string, int>>> Dictionary::dic;
+class  Check_variable {
+public:
+	Dictionary var_dic;
+	vector<string> divide(string s) {
+		vector<string> res;
+		int i = 0;
+		while (i < s.size()) {
+			while (s[i] == ' ' && i  < s.size()) {
+				i++;
+			}
+			string cur_res;
+			while (s[i] != ' ' && i  < s.size()) {
+				cur_res += s[i++];
+			}
+			res.push_back(cur_res);
 
+		}
+		return res;
+	}
+
+	void add_defination(vector<string> s) {
+		set<string> types;
+		types.insert("int");
+		types.insert("float");
+		types.insert("string");
+
+		for (int i = 0; i < s.size(); i++) {
+			if (types.find(s[i]) != types.end()) {
+				if (s[i + 1].find("[") == string::npos) {
+					var_dic.dic["VAR"][s[i + 1]] = make_pair(s[i], std::atoi((s[i + 3]).c_str()));
+					//cout << var_dic.dic["VAR"]["a"].second << endl;
+					continue;
+				}
+			}
+		}
+	}
+
+	bool contain_for(vector<string> s) {
+		bool res = false;
+		for (auto item : s) {
+			if (item == "for") {
+				res = true;
+			}
+		}
+		return res;
+	}
+
+	bool contain_while(vector<string> s) {
+		bool res = false;
+		for (auto item : s) {
+			if (item == "while") {
+				res = true;
+			}
+		}
+		return res;
+	}
+
+
+	void upadte_values(vector<string> s) {
+		set<string> types;
+		types.insert("int");
+		types.insert("float");
+		types.insert("string");
+		for (int i = 0; i < s.size(); i++) {
+			int type = var_dic.dic["VAR"]["a"].second;
+
+			
+			if (var_dic.dic["VAR"].find(s[i])!=var_dic.dic["VAR"].end() && s[i+1] == "=") {
+				
+				var_dic.dic["VAR"][s[i]] = make_pair(var_dic.dic["VAR"][s[i]].first, std::atoi((s[i + 2]).c_str()));
+			
+				}
+			else if ( var_dic.dic["VAR"].find(s[i]) != var_dic.dic["VAR"].end() && contain_for(s) && s[i + 1] == "<") { //this is the for condition
+
+				var_dic.dic["VAR"][s[i]] = make_pair(var_dic.dic["VAR"][s[i]].first, std::atoi((s[i + 2]).c_str())-1);
+
+			}
+
+			else if (var_dic.dic["VAR"].find(s[i]) != var_dic.dic["VAR"].end() && contain_while(s) && s[i + 1] == "<") { //this is the while condition
+
+				var_dic.dic["VAR"][s[i]] = make_pair(var_dic.dic["VAR"][s[i]].first, std::atoi((s[i + 2]).c_str()) - 1);
+
+			}
+
+
+			}
+		}
+	
+	
+
+
+	void add_integer (vector<string> input){
+		for (int i = 0; i < input.size(); i++) {
+			vector<string> cur = divide(input[i]);
+			add_defination(cur);
+			upadte_values(cur);
+			
+		
+		}
+	
+	}
+
+
+
+};
 //Here is the class to check martrix
-class check {
+class Check_martrix {
 public:
 	//divide a string into seperate words 
 	vector<string> divide(string s) {
@@ -84,7 +189,14 @@ public:
 				end = i;
 			}
 		}
+
 		string res = s.substr(begin + 1, end - begin - 1);
+
+		if (Dictionary::dic["VAR"].find(res) != Dictionary::dic["VAR"].end()) {
+			//cout << Dictionary::dic["VAR"]["a"].second;
+			return  Dictionary::dic["VAR"][res].second;
+		
+		}
 		return std::atoi(res.c_str());;
 	}
 
@@ -124,7 +236,7 @@ public:
 	}
 	//check if the use of array is out of boundary and if there is a duplicate defination
 	void check_martrix(vector<string> input) {
-		unordered_map<string, unordered_map<string, pair<string, int>>> dic = Dictionary::build_dic();
+		Dictionary mydic;
 		for (int i = 0; i < input.size(); i++) {
 			string cur_len = input[i];
 			vector<string> cur = divide(input[i]);
@@ -133,20 +245,20 @@ public:
 			};
 			if (declration_array(cur).first != " " && declration_array(cur).second != -1) {
 				string type = declration_array(cur).first; // here begin the duplicate check
-				if (dic["ARY"].find(name_array(cur)) != dic["ARY"].end()) {
+				if (mydic.dic["ARY"].find(name_array(cur)) != mydic.dic["ARY"].end()) {
 					cout << "error at line " << i + 1 << ":" << endl;
 					cout << "The martrix '" << declration_array(cur).first << " " << name_array(cur) << "' has already been defined" << endl;
 
 				}
-				dic["ARY"][name_array(cur)] = declration_array(cur); //ary->name->[type,length]
+				mydic.dic["ARY"][name_array(cur)] = declration_array(cur); //ary->name->[type,length]
 			};
 			if (declration_array(cur).first == " " && declration_array(cur).second != -1) {
-				if (dic["ARY"][name_array(cur)].second <= declration_array(cur).second) {
+				if (mydic.dic["ARY"][name_array(cur)].second <= declration_array(cur).second) {
 					string error = "Boundary exceed : ";
 					error += name_array(cur);
 					error = error + "[" + to_string(declration_array(cur).second) + "]";
 					string correct = "the boundary should not exceed :";
-					correct += to_string(dic["ARY"][name_array(cur)].second);
+					correct += to_string(mydic.dic["ARY"][name_array(cur)].second);
 					cout << "error at line " << i + 1 << ":" << endl;
 					cout << error << endl;
 					cout << correct << endl;
@@ -160,18 +272,43 @@ public:
 	}
 };
 
+class For_checker {
+public:
+	vector<int> for_pos(vector<string> input) {
+		vector<int> res;
+		for (int i = 0; i < input.size(); i++) {
+			if (input[i].find("for") != string::npos) {
+				res.push_back(i);
+			}
+		}
+		return res;
+	}
+
+	
+
+
+};
 
 
 
 int main(int argc, const char * argv[]) {
 	// insert code here...
+	Dictionary::build_dic();
 	vector<string> input;
-	check my_dic;
+	Check_martrix array_checker;
+	Check_variable variable_checker;
 	input.push_back("string b[10]");
 	input.push_back("string b[10]");
-	input.push_back("b[15] = 1");
+	input.push_back("for ( int a = 1 ; a < 12 ; a++ ) {");
+	input.push_back("b[a] = 1");
+	input.push_back("}");
+	input.push_back("int c = 2");
+	input.push_back("while ( c < 20 ) {");
+	input.push_back("b[c] = 2");
+	input.push_back("}");
 	input.push_back("return 0");
-	my_dic.check_martrix(input);
+	variable_checker.add_integer(input);
+	array_checker.check_martrix(input);
 	system("pause");
 
 
