@@ -18,6 +18,7 @@
 using namespace std;
 class Dictionary {
 public:
+    
     static unordered_map<string, unordered_map<string,pair<string,int>>> build_dic() {
         unordered_map<string, unordered_map<string,pair<string, int>>> dic;
         unordered_map<string,pair<string, int>> array;
@@ -111,6 +112,42 @@ public:
         
             
     }
+    
+    void check_martrix (vector<string> input) {
+        unordered_map<string, unordered_map<string,pair<string,int>>> dic = Dictionary::build_dic();
+        for (int i = 0; i < input.size(); i++) {
+            string cur_len = input[i];
+            vector<string> cur = divide(input[i]);
+            if(declration_array(cur).first == " " && declration_array(cur).second == -1 ) { //to see if it is a delaration or using
+                continue;
+            };
+            if(declration_array(cur).first != " " && declration_array(cur).second != -1 ) {
+                string type = declration_array(cur).first; // here begin the duplicate check
+                if (dic["ARY"].find(name_array(cur)) != dic["ARY"].end()) {
+                    cout << "error at line " << i+1 << ":" << endl;
+                    cout << "The martrix '"<< declration_array(cur).first << " " << name_array(cur) <<"' has already been defined" << endl;
+                    
+                }
+                dic["ARY"][name_array(cur)] = declration_array(cur); //ary->name->[type,length]
+            };
+            if(declration_array(cur).first == " " && declration_array(cur).second != -1 ) {
+                if (dic["ARY"][name_array(cur)].second <=  declration_array(cur).second) {
+                    string error = "Boundary exceed : ";
+                    error += name_array(cur);
+                    error = error +  "[" + to_string(declration_array(cur).second) + "]";
+                    string correct = "the boundary should not exceed :";
+                    correct += to_string(dic["ARY"][name_array(cur)].second);
+                    cout << "error at line " << i+1 << ":" << endl;
+                    cout << error << endl;
+                    cout << correct << endl;
+                }
+            }
+            
+            
+        }
+
+        
+    }
 };
 
 
@@ -121,37 +158,10 @@ int main(int argc, const char * argv[]) {
     vector<string> input;
     Dictionary my_dic;
     input.push_back("string b[10]");
+    input.push_back("string b[10]");
     input.push_back("b[15] = 1");
     input.push_back("return 0");
-    unordered_map<string, unordered_map<string,pair<string,int>>> dic = Dictionary::build_dic();
-    for (int i = 0; i < input.size(); i++) {
-        string cur_len = input[i];
-        vector<string> cur = my_dic.divide(input[i]);
-        //cout << i << endl;
-        //cout << my_dic.declration_array(cur).first << endl;
-        //cout << my_dic.declration_array(cur).second << endl;
-        
-        if(my_dic.declration_array(cur).first == " " && my_dic.declration_array(cur).second == -1 ) { //to see if it is a delaration or using
-            continue;
-        };
-        if(my_dic.declration_array(cur).first != " " && my_dic.declration_array(cur).second != -1 ) { //to see if it is a delaration or using
-            string type = my_dic.declration_array(cur).first; // 增加一下判断是否重复定义的功能
-            dic["ARY"][my_dic.name_array(cur)] = my_dic.declration_array(cur); //ary->name->[type,length]
-        };
-        if(my_dic.declration_array(cur).first == " " && my_dic.declration_array(cur).second != -1 ) { //to see if it is a delaration or using
-            if (dic["ARY"][my_dic.name_array(cur)].second <=  my_dic.declration_array(cur).second) {
-                string error = "Boundary exceed : ";
-                error += my_dic.name_array(cur);
-                error = error +  "[" + to_string(my_dic.declration_array(cur).second) + "]";
-                string correct = "the boundary should not exceed :";
-                correct += to_string(dic["ARY"][my_dic.name_array(cur)].second);
-                cout << error << endl;
-                cout << correct << endl;
-            }
-        }
-        
-        
-    }
+    my_dic.check_martrix(input);
     
     
     
