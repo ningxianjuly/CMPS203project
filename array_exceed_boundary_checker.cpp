@@ -295,23 +295,32 @@ int main(int argc, const char * argv[]) {
 	// insert code here...
 	Dictionary::build_dic();
 	vector<string> input;
+	vector<string> show_error_message;
 	Check_martrix array_checker;
 	Check_variable variable_checker;
 	input.push_back("string b[10]");
+	show_error_message.push_back("1:string b[10]");
 	input.push_back("string b[10]");
+	show_error_message.push_back("2:string b[10]");
 	input.push_back("for ( int a = 1 ; a < 12 ; a++ ) {");
+	show_error_message.push_back("3:for ( int a = 1 ; a < 12 ; a++ ) {");
 	input.push_back("b[a] = 1");
+	show_error_message.push_back("4:b[a] = 1");
 	input.push_back("}");
+	show_error_message.push_back("5:}");
 	input.push_back("int c = 2");
+	show_error_message.push_back("6:int c = 2");
 	input.push_back("while ( c < 20 ) {");
+	show_error_message.push_back("7:while ( c < 20 ) {");
 	input.push_back("b[c] = 2");
+	show_error_message.push_back("8:b[c] = 2");
 	input.push_back("}");
+	show_error_message.push_back(9:"}");
 	input.push_back("return 0");
+	show_error_message.push_back("10:return 0");
 	variable_checker.add_integer(input);
 	array_checker.check_martrix(input);
 	system("pause");
-
-
 
 	return 0;
 }
