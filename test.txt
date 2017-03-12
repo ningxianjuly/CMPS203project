@@ -11,22 +11,15 @@
  */
 public class Solution {
     public boolean containsDuplicate(int[] nums) {
-        /*
-        Map<Integer,Integer> freq = new HashMap<Integer,Integer>();
-        for(int index = 0;index < nums.length;index++){
-            freq.put(nums[index],freq.getOrDefault(nums[index],0) + 1);
-            int temp = freq.get(nums[index]);
-            if(temp == 2)
-                return true;
-        }
-        return false;
-        */
-        Set<Integer> numsset = new HashSet<Integer>();
-        for(int element: nums){
-            numsset.add(element);
-        }
-        if(numsset.size() != nums.length)
-            return true;
-        else return false;
+        string b[10]";
+		string b[10]";
+		for (int a = 1 ; a < 12 : a++) {
+			b[a] = 1;
+		}
+		int c = 2;
+		while ( c < 20 ) {
+			b[c] = 2;
+		}
+		return 0;
     }
 }
