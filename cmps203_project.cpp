@@ -105,7 +105,7 @@ public:
 			return;
 		}
 		cout << "syntax error at line " << res.len << " :" << endl;
-		cout << "expect " << res.error << " at this len" << endl;
+		cout << "expect " << res.error << " at this line" << endl;
 	
 	}
 
