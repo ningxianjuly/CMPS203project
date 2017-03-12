@@ -13,9 +13,6 @@ brackets -- tianyi
 file close -- tianyi
 </p>
 <p>
-malloc free -- tianyi
-</p>
-<p>
 variable incosistence -- tianyi
 </p>
 <p>
