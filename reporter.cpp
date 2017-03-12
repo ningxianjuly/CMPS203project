@@ -4,6 +4,12 @@
 #include <fstream>
 #include <sstream>
 
+
+/*
+* @Chengye Tang
+* @ctang32@ucsc.edu
+*/
+
 using namespace std;
 
 
@@ -45,6 +51,12 @@ int reportToFile(vector<string> messages, string fileName)
 	myfile.close();
 	return 0;
 }
+
+
+
+/*
+*test cases
+*/
 
 //int main()
 //{
