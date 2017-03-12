@@ -16,7 +16,6 @@
 #include <cstdlib>
 
 using namespace std;
-using namespace std;
 //Here is the defination of dictionay
 //example: ["Array",["variable_name",(type,length)]]
 class Dictionary {
