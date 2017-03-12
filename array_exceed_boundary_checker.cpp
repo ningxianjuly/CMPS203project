@@ -50,7 +50,7 @@ public:
 		types.insert("int");
 		types.insert("float");
 		types.insert("string");
-
+		types.insert("char");
 		for (int i = 0; i < s.size(); i++) {
 			if (types.find(s[i]) != types.end()) {
 				if (s[i + 1].find("[") == string::npos) {
@@ -88,18 +88,19 @@ public:
 		types.insert("int");
 		types.insert("float");
 		types.insert("string");
+		types.insert("char");
 		for (int i = 0; i < s.size(); i++) {
 			int type = var_dic.dic["VAR"]["a"].second;
 
-			
-			if (var_dic.dic["VAR"].find(s[i])!=var_dic.dic["VAR"].end() && s[i+1] == "=") {
-				
-				var_dic.dic["VAR"][s[i]] = make_pair(var_dic.dic["VAR"][s[i]].first, std::atoi((s[i + 2]).c_str()));
-			
-				}
-			else if ( var_dic.dic["VAR"].find(s[i]) != var_dic.dic["VAR"].end() && contain_for(s) && s[i + 1] == "<") { //this is the for condition
 
-				var_dic.dic["VAR"][s[i]] = make_pair(var_dic.dic["VAR"][s[i]].first, std::atoi((s[i + 2]).c_str())-1);
+			if (var_dic.dic["VAR"].find(s[i]) != var_dic.dic["VAR"].end() && s[i + 1] == "=") {
+
+				var_dic.dic["VAR"][s[i]] = make_pair(var_dic.dic["VAR"][s[i]].first, std::atoi((s[i + 2]).c_str()));
+
+			}
+			else if (var_dic.dic["VAR"].find(s[i]) != var_dic.dic["VAR"].end() && contain_for(s) && s[i + 1] == "<") { //this is the for condition
+
+				var_dic.dic["VAR"][s[i]] = make_pair(var_dic.dic["VAR"][s[i]].first, std::atoi((s[i + 2]).c_str()) - 1);
 
 			}
 
@@ -110,21 +111,22 @@ public:
 			}
 
 
-			}
 		}
-	
-	
+	}
 
 
-	void add_integer (vector<string> input){
+
+
+	void add_integer(vector<string> input) {
 		for (int i = 0; i < input.size(); i++) {
 			vector<string> cur = divide(input[i]);
+
 			add_defination(cur);
 			upadte_values(cur);
-			
-		
+
+
 		}
-	
+
 	}
 
 
@@ -189,7 +191,7 @@ public:
 		if (Dictionary::dic["VAR"].find(res) != Dictionary::dic["VAR"].end()) {
 			//cout << Dictionary::dic["VAR"]["a"].second;
 			return  Dictionary::dic["VAR"][res].second;
-		
+
 		}
 		return std::atoi(res.c_str());;
 	}
@@ -211,6 +213,7 @@ public:
 		types.insert("int");
 		types.insert("float");
 		types.insert("string");
+		types.insert("char");
 		if (!cotain_array(s)) {
 			return make_pair(" ", -1);
 		}
@@ -228,18 +231,40 @@ public:
 
 
 	}
+
+	bool contain_strcpy(vector<string> s) {
+		bool res = false;
+		for (string item : s) {
+			if (item.find("strcpy") != string::npos) {
+				res = true;
+			}
+		}
+		return res;
+	}
+
 	//check if the use of array is out of boundary and if there is a duplicate defination
 	void check_martrix(vector<string> input) {
 		Dictionary mydic;
 		for (int i = 0; i < input.size(); i++) {
 			string cur_len = input[i];
 			vector<string> cur = divide(input[i]);
+			if (contain_strcpy(cur)) {
+				int len_del = mydic.dic["ARY"][cur[1]].second;
+				int len_ctr = cur[3].size() - 2;
+				if (len_del < len_ctr) {
+					cout << "error at line " << i + 1 << ":" << endl;
+					cout << "strcpy function out of boundary error" << endl;
+					cout << "the boundry of " << cur[1] << " should not exceed " << len_del << endl;
+				}
+			}
+
 			if (declration_array(cur).first == " " && declration_array(cur).second == -1) { //to see if it is a delaration or using
 				continue;
 			};
 			if (declration_array(cur).first != " " && declration_array(cur).second != -1) {
 				string type = declration_array(cur).first; // here begin the duplicate check
 				if (mydic.dic["ARY"].find(name_array(cur)) != mydic.dic["ARY"].end()) {
+					cout << "in" << endl;
 					cout << "error at line " << i + 1 << ":" << endl;
 					cout << "The martrix '" << declration_array(cur).first << " " << name_array(cur) << "' has already been defined" << endl;
 
@@ -301,7 +326,7 @@ vector<string> PreProcess() {
 
 	///////////////////Filename and position
 
-	infile.open("C:\\Users\\root\\Downloads\\test.txt");
+	infile.open("D:\\test.txt");
 
 	///////////////////
 
@@ -391,15 +416,7 @@ vector<string> PreProcess() {
 
 	///test print the preprocessed codes
 
-	while (index < Line) {
-
-		cout << "Line:" << index + 1 << "\t";
-
-		cout << input[index] << endl;
-
-		index++;
-
-	}
+	
 
 	infile.close();
 
@@ -410,28 +427,29 @@ int main(int argc, const char * argv[]) {
 	// insert code here...
 	Dictionary::build_dic();
 	vector<string> input;
+	input.push_back("class Solution {");
+	input.push_back("public void test() {");
+	input.push_back("int b[10] ;");
+	input.push_back("int b[10] ;");
+	input.push_back("for ( int a = 1 ; a < 12 : a++) {");
+	input.push_back("b[a] = 1;");
+	input.push_back("char str[5] {");
+	input.push_back("strcpy( str , '0123456'");
+	input.push_back("}");
+	for (auto item : input) {
+		cout << item << endl;
+	}
 	vector<string> show_error_message;
 	Check_martrix array_checker;
 	Check_variable variable_checker;
 
 	vector<string> input_func;
 	input_func = PreProcess();
-
-	input.push_back("string b[10]");
-	input.push_back("string b[10]");
-	input.push_back("for ( int a = 1 ; a < 12 ; a++ ) {");
-	input.push_back("b[a] = 1");
-	input.push_back("}");
-	input.push_back("int c = 2");
-	input.push_back("while ( c < 20 ) {");
-	input.push_back("b[c] = 2");
-	input.push_back("}");
-	input.push_back("return 0");
+	for (auto item : input_func) {
+		cout << item << endl;
+	}
 	variable_checker.add_integer(input);
 	array_checker.check_martrix(input);
-
-	variable_checker.add_integer(input_func);
-	array_checker.check_martrix(input_func);
 
 	system("pause");
 
