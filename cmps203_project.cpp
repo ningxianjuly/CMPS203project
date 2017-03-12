@@ -8,6 +8,7 @@
 #include <set>
 #include <cstdlib>
 #include <fstream>
+#include <stack>
 
 using namespace std;
 const int LINE_LENGTH = 200;
@@ -25,6 +26,93 @@ public:
 	}
 };
 unordered_map<string, unordered_map<string, pair<string, int>>> Dictionary::dic;
+
+class ResultType {
+public:
+	int len;
+	char error;
+	ResultType(int _len, char _error) : len(_len), error(_error) {};
+};
+class Check_syntax {
+public:
+	ResultType check_syntax(vector<string> s) {
+		stack<char> stack;
+		for (int i = 0; i < s.size(); i++) {
+			for (int j = 0; j < s[i].size(); j++) {
+				if (s[i][j] == '(') {
+					stack.push('(');
+				}
+				if (s[i][j] == '{') {
+					stack.push('{');
+				}
+				if (s[i][j] == '[') {
+					stack.push('[');
+				}
+				if (s[i][j] == '}') {
+					if (stack.top() == '{') {
+						stack.pop();
+					}
+					else {
+						ResultType res(i+1, '{');
+						return res;
+					}
+				}
+				if (s[i][j] == ')') {
+					if (stack.top() == '(') {
+						stack.pop();
+					}
+					else {
+						ResultType res(i+1, '(');
+						return res;
+					}
+				}
+				if (s[i][j] == ']') {
+					if (stack.top() == '[') {
+						stack.pop();
+					}
+					else {
+						ResultType res(i+1, '[');
+						return res;
+					}
+				}
+
+			}
+		}
+
+		if (stack.empty()) {
+			ResultType res(-1, 'c');
+			return res;
+		}
+		else {
+			ResultType res(s.size(), 'c');
+			if (stack.top() == '(') {
+				res.error = ')';
+			}
+			if (stack.top() == '[') {
+				res.error = ']';
+			}
+			if (stack.top() == '{') {
+				res.error = '}';
+			}
+			return res;
+		}
+
+	}
+
+	void syntax_result(vector<string> s) {
+		ResultType res = check_syntax(s);
+		if (res.len == -1) {
+			return;
+		}
+		cout << "syntax error at line " << res.len << " :" << endl;
+		cout << "expect " << res.error << " at this len" << endl;
+	
+	}
+
+
+
+
+};
 class  Check_variable {
 public:
 	Dictionary var_dic;
@@ -308,10 +396,10 @@ vector<string> PreProcess() {
 	int posi = 0;
 	ifstream infile;
 	int IsComment = 0;
-	
+
 	////initiate
 	///////////////////Filename and position
-	infile.open("C:\\Users\\root\\Downloads\\CMPS203project-master\\CMPS203project-master\\test.txt");
+	infile.open("D:\\test.txt");
 	///////////////////
 
 	int Line = 0;
@@ -353,11 +441,11 @@ vector<string> PreProcess() {
 		//remove the "/* ... */" comment
 		Blank[Line] = posi;//get the number of blank
 		temp = data;
-		string temp_1; 
+		string temp_1;
 		char data1[LINE_LENGTH];
 		int temp_k = 0;
 		//cout << sizeof(temp) <<endl;
-		for (int k = 0;k < 200; k++){
+		for (int k = 0; k < 200; k++) {
 			if (data[k] == '\t') {
 				continue;
 			}
@@ -404,6 +492,7 @@ int main(int argc, const char * argv[]) {
 	vector<string> show_error_message;
 	Check_martrix array_checker;
 	Check_variable variable_checker;
+	Check_syntax syntax_checker;
 
 	//variable_checker.add_integer(input);
 	//array_checker.check_martrix(input);
@@ -414,6 +503,7 @@ int main(int argc, const char * argv[]) {
 	for (auto item : input_func) {
 		cout << item << endl;
 	}
+	syntax_checker.syntax_result(input_func);
 	variable_checker.add_integer(input_func);
 	array_checker.check_martrix(input_func);
 
