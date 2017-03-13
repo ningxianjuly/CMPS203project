@@ -13,10 +13,10 @@ brackets -- gongyu  done
 algorithm design and system integration -- tianyi  done
 </p>
 <p>
-file close -- tianyi   done
+MFC UI display -- tianyi  done
 </p>
 <p>
-variable incosistence -- tianyi
+file close -- tianyi   done
 </p>
 <p>
 error report -- chengye   done
