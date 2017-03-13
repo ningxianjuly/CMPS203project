@@ -1,20 +1,23 @@
 # CMPS203project
 C++ checker
 <p>
-input file is code file -- chaoyu
+input file is code file -- chaoyu   done
 </p>
 <p>
-array enhanced + for while array outbound -- gongyu
+array outbound (while, for and others) and strcpy error checker -- gongyu   done
 </p>
 <p>
-brackets -- tianyi
+brackets -- gongyu  done
 </p>
 <p>
-file close -- tianyi
+system integration -- gongyu  done
+</p>
+<p>
+file close -- tianyi   done
 </p>
 <p>
 variable incosistence -- tianyi
 </p>
 <p>
-error report -- chengye
+error report -- chengye   done
 </p>
