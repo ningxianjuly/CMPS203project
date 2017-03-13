@@ -23,7 +23,7 @@ public class Solution {
 		return 0;
     }
 
-	FILE *a = fopen("good.c", "r");
+    FILE *a = fopen("good.c", "r");
     if (!a) {
 		return 0;
 	}
