@@ -22,4 +22,13 @@ public class Solution {
 		}
 		return 0;
     }
+
+	FILE *a = fopen("good.c", "r");
+    if (!a) {
+		return 0;
+	}
+    //fclose(a);
+    return 0;
 }
+
+
