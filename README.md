@@ -10,7 +10,7 @@ array outbound (while, for and others) and strcpy error checker -- gongyu   done
 brackets -- gongyu  done
 </p>
 <p>
-system integration -- gongyu  done
+algorithm design and system integration -- tianyi  done
 </p>
 <p>
 file close -- tianyi   done
