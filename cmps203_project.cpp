@@ -20,9 +20,10 @@ public:
 	static void build_dic() {
 		unordered_map<string, pair<string, int>> array;
 		unordered_map<string, pair<string, int>> variable;
+		unordered_map<string, pair<string, int>> pointer;
 		dic["ARY"] = array;
 		dic["VAR"] = variable;
-
+		dic["POI"] = pointer;
 	}
 };
 unordered_map<string, unordered_map<string, pair<string, int>>> Dictionary::dic;
@@ -53,7 +54,7 @@ public:
 						stack.pop();
 					}
 					else {
-						ResultType res(i+1, '{');
+						ResultType res(i + 1, '{');
 						return res;
 					}
 				}
@@ -62,7 +63,7 @@ public:
 						stack.pop();
 					}
 					else {
-						ResultType res(i+1, '(');
+						ResultType res(i + 1, '(');
 						return res;
 					}
 				}
@@ -71,7 +72,7 @@ public:
 						stack.pop();
 					}
 					else {
-						ResultType res(i+1, '[');
+						ResultType res(i + 1, '[');
 						return res;
 					}
 				}
@@ -106,11 +107,8 @@ public:
 		}
 		cout << "syntax error at line " << res.len << " :" << endl;
 		cout << "expect " << res.error << " at this line" << endl;
-	
+
 	}
-
-
-
 
 };
 class  Check_variable {
@@ -195,31 +193,55 @@ public:
 			else if (var_dic.dic["VAR"].find(s[i]) != var_dic.dic["VAR"].end() && contain_while(s) && s[i + 1] == "<") { //this is the while condition
 
 				var_dic.dic["VAR"][s[i]] = make_pair(var_dic.dic["VAR"][s[i]].first, std::atoi((s[i + 2]).c_str()) - 1);
-
 			}
-
-
 		}
 	}
-
-
-
 
 	void add_integer(vector<string> input) {
 		for (int i = 0; i < input.size(); i++) {
 			vector<string> cur = divide(input[i]);
-
 			add_defination(cur);
 			upadte_values(cur);
+		}
+	}
+};
 
-
+class  Check_resource {
+public:
+	Dictionary var_dic;
+	ResultType check_resource(vector<string> s) {
+		bool has_fopen_or_not = false;
+		bool has_fclose_or_not = false;
+		int error_line = 0;
+		for (int i = 0; i < s.size(); i++) {
+			string temp_str = s[i];
+			if (temp_str.find("FILE") != 4294967295 && temp_str.find("fopen") != 4294967295) {
+				has_fopen_or_not = true;
+				error_line = i + 1;
+			}
+			if (temp_str.find("fclose") != 4294967295) {
+				has_fclose_or_not = true;
+			}
 		}
 
+		if (has_fopen_or_not == true && has_fclose_or_not == false) {
+			ResultType res(error_line, '[');
+			return res;
+		}
 	}
 
-
-
+	void resource_result(vector<string> s) {
+		ResultType res = check_resource(s);
+		if (res.len == -1) {
+			return;
+		}
+		cout << "Resouce Leak error at line " << res.len << " :" << endl;
+		cout << "File resource should be released. error" << endl;
+		
+	}
 };
+
+
 //Here is the class to check martrix
 class Check_martrix {
 public:
@@ -291,9 +313,6 @@ public:
 		while (s[pos][end] != '[') end++;
 		return s[pos].substr(0, end);
 	}
-
-
-
 
 	//return the information of array based on the information above 
 	pair<string, int> declration_array(vector<string> s) {
@@ -399,7 +418,8 @@ vector<string> PreProcess() {
 
 	////initiate
 	///////////////////Filename and position
-	infile.open("D:\\test.txt");
+	infile.open("C:\\Users\\root\\Downloads\\CMPS203project-master\\CMPS203project-master\\test.txt");
+	//infile.open("D:\\test.txt");
 	///////////////////
 
 	int Line = 0;
@@ -493,6 +513,7 @@ int main(int argc, const char * argv[]) {
 	Check_martrix array_checker;
 	Check_variable variable_checker;
 	Check_syntax syntax_checker;
+	Check_resource resource_checker;
 
 	//variable_checker.add_integer(input);
 	//array_checker.check_martrix(input);
@@ -506,6 +527,7 @@ int main(int argc, const char * argv[]) {
 	syntax_checker.syntax_result(input_func);
 	variable_checker.add_integer(input_func);
 	array_checker.check_martrix(input_func);
+	resource_checker.resource_result(input_func);
 
 	system("pause");
 
